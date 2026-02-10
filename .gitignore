@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual
+.venv/
+venv/
+
+# IDE
+.idea/
+.cursor/
+
+# Local data (do not commit user brains)
+# .cerebra/ is in home dir, not repo
