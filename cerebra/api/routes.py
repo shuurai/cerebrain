@@ -6,7 +6,7 @@ from typing import Any
 
 
 def handle_chat(body: dict[str, Any], brain_name: str | None = None) -> dict[str, Any]:
-    """POST /v1/chat — run brain agent and return reply."""
+    """POST /v1/chat — run brain matrix and return reply."""
     content = (body.get("content") or body.get("message") or "").strip()
     if not content:
         return {"reply": "", "session_id": body.get("session_id"), "error": "empty content"}
@@ -30,7 +30,7 @@ def handle_brain_info(brain_name: str | None) -> dict[str, Any]:
 
 
 async def handle_websocket(websocket: Any, brain_name: str | None = None) -> None:
-    """WebSocket /v1/stream — stateful chat: one agent per connection, JSON messages."""
+    """WebSocket /v1/stream — stateful chat: one brain matrix per connection, JSON messages."""
     from cerebra.core.brain_agent import BrainAgent
 
     try:

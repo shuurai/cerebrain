@@ -1,4 +1,4 @@
-"""Core brain agent components."""
+"""Core brain matrix components (orchestration, emotional, logical, memory, inspiration)."""
 
 from cerebra.core.brain_agent import BrainAgent
 

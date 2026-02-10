@@ -1,7 +1,8 @@
 [project]
 name = "cerebra"
-version = "0.1.0"
-description = "Terminal-based brain agent CLI with SOUL, MEMORY, USER, TOOLS"
+version = "0.3.2"
+
+description = "Terminal-based brain matrix CLI (SOUL, MEMORY, USER, TOOLS)"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }

@@ -6,6 +6,60 @@ from typing import Any
 
 import yaml
 
+# Full config template: every variable visible for manual edit. Defaults only.
+FULL_CONFIG_TEMPLATE: dict[str, Any] = {
+    "default_brain": "default",
+    "server": {
+        "port": 17971,
+    },
+    "llm_defaults": {
+        "max_tokens": 8192,
+        "temperature": 0.7,
+    },
+    "providers": {
+        "openrouter": {
+            "api_key": "",
+            "api_base": "https://openrouter.ai/api/v1",
+        },
+        "openai": {
+            "api_key": "",
+            "api_base": "https://api.openai.com/v1",
+        },
+        "anthropic": {
+            "api_key": "",
+            "api_base": "https://api.anthropic.com",
+        },
+        "ollama": {
+            "api_key": "",
+            "api_base": "http://localhost:11434",
+        },
+        "local": {
+            "api_key": "",
+            "api_base": "http://localhost:5000",
+        },
+    },
+}
+
+
+def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+    """Recursively merge override into base. Override values take precedence."""
+    out = dict(base)
+    for k, v in override.items():
+        if k in out and isinstance(out[k], dict) and isinstance(v, dict):
+            out[k] = _deep_merge(out[k], v)
+        else:
+            out[k] = v
+    return out
+
+
+def get_full_config(overrides: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Return full config with all keys: template + loaded file + overrides."""
+    loaded = load_config()
+    base = _deep_merge(FULL_CONFIG_TEMPLATE, loaded)
+    if overrides:
+        base = _deep_merge(base, overrides)
+    return base
+
 
 def get_config_dir() -> Path:
     """Config directory: ~/.cerebra."""
@@ -68,11 +122,25 @@ def load_config(config_path: Path | None = None) -> dict[str, Any]:
 
 
 def save_config(data: dict[str, Any], config_path: Path | None = None) -> None:
-    """Save YAML config."""
+    """Save YAML config. Merges data into full template so all variables are visible."""
     path = config_path or get_config_path()
     path.parent.mkdir(parents=True, exist_ok=True)
+    full = get_full_config(data)
     with open(path, "w") as f:
-        yaml.safe_dump(data, f, default_flow_style=False, sort_keys=False)
+        f.write("# Cerebra config — edit any value. All supported keys are listed.\n")
+        yaml.safe_dump(full, f, default_flow_style=False, sort_keys=False)
+
+
+def get_default_port() -> int:
+    """Default API server port from config."""
+    cfg = load_config()
+    port = cfg.get("server", {}).get("port") or cfg.get("port")
+    if port is not None:
+        try:
+            return int(port)
+        except (TypeError, ValueError):
+            pass
+    return 17971
 
 
 def get_default_brain_name() -> str | None:

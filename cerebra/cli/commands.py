@@ -1,6 +1,7 @@
 """CLI commands for cerebra."""
 
 from pathlib import Path
+from typing import Optional
 
 import typer
 from rich.console import Console
@@ -10,7 +11,7 @@ from cerebra import __logo__, __version__
 
 app = typer.Typer(
     name="cerebra",
-    help=f"{__logo__} - Brain Agent CLI",
+    help=f"{__logo__} - Brain Matrix CLI",
     no_args_is_help=True,
 )
 
@@ -29,7 +30,7 @@ def main(
         None, "--version", "-v", callback=_version_callback, is_eager=True
     ),
 ) -> None:
-    """Cerebra - Terminal-based brain agent with SOUL, MEMORY, USER, TOOLS."""
+    """Cerebra - Terminal-based brain matrix (SOUL, MEMORY, USER, TOOLS)."""
     pass
 
 
@@ -40,30 +41,25 @@ def main(
 
 @app.command("init")
 def init_cmd(
-    name: str = typer.Option(None, "--name", "-n", help="Brain name"),
+    name: str = typer.Option(None, "--name", "-n", help="Brain name (prompted if not set)"),
     llm: str = typer.Option(
-        "openrouter",
+        None,
         "--llm",
         "-l",
-        help="LLM provider: openrouter, openai, anthropic, ollama, local",
+        help="LLM provider: openrouter, openai, anthropic, ollama, local (prompted if not set)",
     ),
 ) -> None:
-    """Initialize a new brain (required before first use)."""
+    """Initialize a new brain: interactive wizard for provider, API key, model, port, soul."""
     from cerebra.scripts.setup_cerebra import BrainWizard
 
     wizard = BrainWizard()
-    wizard.create_brain(name=name or "default", llm=llm)
+    wizard.create_brain(name=name, llm=llm)
 
 
 @app.command("onboard")
 def onboard_cmd(
     name: str = typer.Option(None, "--name", "-n", help="Brain name"),
-    llm: str = typer.Option(
-        "openrouter",
-        "--llm",
-        "-l",
-        help="LLM provider: openrouter, openai, anthropic, ollama, local",
-    ),
+    llm: str = typer.Option(None, "--llm", "-l", help="LLM provider"),
 ) -> None:
     """Alias for init: initialize a new brain."""
     init_cmd(name=name, llm=llm)
@@ -83,7 +79,9 @@ def chat(
     from cerebra.core.brain_agent import BrainAgent
     from cerebra.ui.terminal_brain import TerminalInterface
 
+    console.print("Booting ....")
     agent = BrainAgent.load(brain)
+    console.print("Loading into Cerebra Matrix Terminal ....")
     TerminalInterface(agent, show_visual=not no_visual).run()
 
 
@@ -95,12 +93,13 @@ def chat(
 @app.command()
 def serve(
     brain: str = typer.Option(None, "--brain", "-b", help="Brain to load"),
-    port: int = typer.Option(17971, "--port", "-p", help="Server port"),
+    port: Optional[int] = typer.Option(None, "--port", "-p", help="Server port (default from config or 17971)"),
 ) -> None:
     """Run HTTP + WebSocket API server."""
     from cerebra.api.server import run_server
+    from cerebra.utils.config_loader import get_default_port
 
-    run_server(brain_name=brain, port=port)
+    run_server(brain_name=brain, port=port if port is not None else get_default_port())
 
 
 # -----------------------------------------------------------------------------

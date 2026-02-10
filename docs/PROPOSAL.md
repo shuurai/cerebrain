@@ -1,15 +1,12 @@
-"Cerebra" - Brain Agent CLI Tool - Project Proposal
+"Cerebra" - Brain Matrix CLI - Project Proposal
 
 ## Project Overview
 
-Cerebra is a terminal-based, ASCII-visualized brain agent system that simulates
-emotional, logical, and memory processes with true inspiration generation. It's
-an open-source framework for creating personalized AI personalities with
-continuous learning and stateful processing.
+Cerebra is a terminal-based, ASCII-visualized **brain matrix** — not a single agent, but a system of brain parts (emotional, logical, memory, inspiration) working together, extended from the agent concept. It simulates emotional, logical, and memory processes with true inspiration generation. It's an open-source framework for creating personalized AI personalities with continuous learning and stateful processing.
 
 ### Scope
 
-- **In scope (v1):** Single-brain, terminal-first agent with SOUL + MEMORY + USER + TOOLS; ASCII visualization; init flow; one self-contained vector store; HTTP/WebSocket API for integration with other tools (e.g. Nanobot, OpenClawd); CLI only (no web UI).
+- **In scope (v1):** Single-brain matrix (multiple brain parts), terminal-first; SOUL + MEMORY + USER + TOOLS; ASCII visualization; init flow; one self-contained vector store; HTTP/WebSocket API for integration with other tools (e.g. Nanobot, OpenClawd); CLI only (no web UI).
 - **Out of scope (v1):** Multi-brain communication, training mode, plugin system, web UI. These remain in Future extensions.
 
 ## Distribution & Install
@@ -56,14 +53,14 @@ flowchart TB
   User[User context adaptive] --> Brain
   Tools[Tools adaptive] --> Brain
   LLM[LLM] --> Brain
-  Brain[Brain Agent] --> Terminal[Terminal UI]
+  Brain[Brain Matrix] --> Terminal[Terminal UI]
   Brain --> API[API Server]
 ```
 
 ## Core Features
 
 1. **Terminal-based Brain Visualization** — Real-time ASCII art showing brain activity. Default `cerebra chat` runs the interactive terminal UI with ASCII visualization; use `cerebra chat --no-visual` for terminal chat without ASCII.
-2. Multi-Agent Architecture — Emotional Engine, Logical Engine, Memory Engine, Inspiration Engine
+2. Brain Matrix Architecture — emotional, logical, memory, and inspiration parts (extended from agent concept)
 3. Natural Randomness — Quantum/atmospheric sources with fallbacks
 4. LLM Agnostic — Plug in any LLM API (OpenAI, Anthropic, Ollama, etc.)
 5. Persistent State — Saves brain state between sessions
@@ -87,7 +84,7 @@ flowchart TB
 cerebra/
 ├── core/
 │   ├── __init__.py
-│   ├── brain_agent.py      # Main orchestration
+│   ├── brain_agent.py      # Brain matrix orchestration
 │   ├── emotional_self.py   # Mood, emotion dynamics
 │   ├── logical_self.py     # LLM interface & reasoning
 │   ├── memory_system.py    # Short/Long term memory
@@ -156,7 +153,7 @@ Cerebra can run as a "brain service" so other tools (e.g. Nanobot, OpenClawd) ca
   - `POST /v1/chat` or `POST /v1/messages` — send message, return stream or final response. Body: JSON with `role`, `content`, optional `session_id`.
   - `GET /v1/status` or `GET /health` — health/readiness.
   - `GET /v1/brain` (optional) — current brain config (non-sensitive).
-- **WebSocket:** `WS /v1/stream` — stateful chat: one brain agent per connection. Send JSON `{"content": "..."}` (or `"message"`); receive `{"reply": "...", "session_id": "..."}`. On connect, server sends `{"type": "connected", "brain": "..."}`. Requires FastAPI/uvicorn (used when available).
+- **WebSocket:** `WS /v1/stream` — stateful chat: one brain matrix per connection. Send JSON `{"content": "..."}` (or `"message"`); receive `{"reply": "...", "session_id": "..."}`. On connect, server sends `{"type": "connected", "brain": "..."}`. Requires FastAPI/uvicorn (used when available).
 - **Integrations:** Nanobot and OpenClawd can use HTTP or WebSocket clients to talk to cerebra when it runs in server mode.
 
 ## CLI Reference
@@ -431,7 +428,7 @@ Phase 2 Implementation (Parallel Tracks):
 
 Track A: Core Systems
 
-· Implement brain agent orchestration · Build emotional system · Create memory
+· Implement brain matrix orchestration · Build emotional system · Create memory
 backend
 
 Track B: UI Systems
