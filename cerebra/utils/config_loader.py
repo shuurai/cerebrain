@@ -62,8 +62,8 @@ def get_full_config(overrides: dict[str, Any] | None = None) -> dict[str, Any]:
 
 
 def get_config_dir() -> Path:
-    """Config directory: ~/.cerebra."""
-    return Path(os.path.expanduser("~")).resolve() / ".cerebra"
+    """Config directory: ~/.cerebraai."""
+    return Path(os.path.expanduser("~")).resolve() / ".cerebraai"
 
 
 def get_config_path() -> Path:
@@ -72,7 +72,7 @@ def get_config_path() -> Path:
 
 
 def get_data_dir() -> Path:
-    """Data directory (brains, vectors, logs): ~/.cerebra."""
+    """Data directory (brains, vectors, logs): ~/.cerebraai."""
     return get_config_dir()
 
 
@@ -127,7 +127,7 @@ def save_config(data: dict[str, Any], config_path: Path | None = None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     full = get_full_config(data)
     with open(path, "w") as f:
-        f.write("# Cerebra config — edit any value. All supported keys are listed.\n")
+        f.write("# Cerebraai config — edit any value. All supported keys are listed.\n")
         yaml.safe_dump(full, f, default_flow_style=False, sort_keys=False)
 
 

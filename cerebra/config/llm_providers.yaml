@@ -1,5 +1,5 @@
 # LLM provider templates (defaults used at brain init).
-# Override in brain state or ~/.cerebra/config.yaml per brain.
+# Override in brain state or ~/.cerebraai/config.yaml per brain.
 # Defaults: max_tokens=8192, temperature=0.7
 
 defaults:

@@ -203,10 +203,10 @@ class BrainAgent:
         ensure_dirs()
         name = brain_name or get_default_brain_name()
         if not name:
-            raise RuntimeError("No brain configured. Run 'cerebra init' first.")
+            raise RuntimeError("No brain configured. Run 'cerebraai init' first.")
         workspace = get_brain_workspace(name)
         if not workspace.exists():
-            raise RuntimeError(f"Brain workspace not found: {workspace}. Run 'cerebra init'.")
+            raise RuntimeError(f"Brain workspace not found: {workspace}. Run 'cerebraai init'.")
         state = load_brain_state(name)
         return cls(name=name, workspace=workspace, state=state)
 

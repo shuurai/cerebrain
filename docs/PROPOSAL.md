@@ -24,7 +24,7 @@ Platform support: Linux and macOS are explicitly supported. Windows is untested;
 Cerebra must be initialized before first use. No `chat` or `serve` until at least one brain is created.
 
 - **First-time:** Run `cerebra init` (or `cerebra onboard`). This creates workspace, config, and the first brain.
-- **Base SOUL:** Stored at init (e.g. `~/.cerebra/workspace/<brain>/SOUL.md` or inside `brain_states/`) — personality, values, communication style. SOUL is the fixed core and does not change automatically.
+- **Base SOUL:** Stored at init (e.g. `~/.cerebraai/workspace/<brain>/SOUL.md` or inside `brain_states/`) — personality, values, communication style. SOUL is the fixed core and does not change automatically.
 - **Adaptive over time:**
   - **User context:** e.g. `workspace/USER.md` or per-brain user file; updated as preferences/facts are learned. User Context is adaptive.
   - **Tools:** The set of tools and their descriptions can be extended or configured over time (e.g. via config or workspace `TOOLS.md`); tool-use results feed back into memory. Tools are adaptive in configuration and usage; SOUL does not change.
@@ -71,7 +71,7 @@ flowchart TB
 - Python 3.11+
 - **Typer** (CLI), **Rich** (terminal UI, ASCII art, tables/panels)
 - Textual (optional for advanced UI)
-- **Self-contained vector database:** ChromaDB in persistent local mode (single directory, no separate server process), or alternatively sqlite-vec. One vector store per brain under `~/.cerebra` (or project data dir); no distributed/external vector service in v1.
+- **Self-contained vector database:** ChromaDB in persistent local mode (single directory, no separate server process), or alternatively sqlite-vec. One vector store per brain under `~/.cerebraai` (or project data dir); no distributed/external vector service in v1.
 - Sentence-Transformers (embeddings)
 - Requests (API calls)
 - PyYAML (configuration)
@@ -134,7 +134,7 @@ cerebra/
 
 | Area | Status | Notes |
 |------|--------|-------|
-| **Phase 1 — Foundation** | Done | CLI (Typer), config (YAML, ~/.cerebra), persistence (brain_states, list/load/save/export), init wizard (SOUL, USER, TOOLS, LLM templates). |
+| **Phase 1 — Foundation** | Done | CLI (Typer), config (YAML, ~/.cerebraai), persistence (brain_states, list/load/save/export), init wizard (SOUL, USER, TOOLS, LLM templates). |
 | **Phase 2 — Brain & Memory** | Done | EmotionalSelf (baseline + nudge), NaturalRandomness (ANU/random.org + SystemEntropy), MemorySystem (short-term + optional ChromaDB long-term), InspirationEngine (spark), LogicalSelf (OpenAI-compatible HTTP client). BrainAgent orchestrates all; system prompt from SOUL/USER/TOOLS + memory. |
 | **Phase 3 — Terminal UI** | Done | ASCII brain frame, consciousness stream (mood/inspiration after reply), metrics dashboard (generate_metrics_panel). Chat loop with optional --no-visual. |
 | **Phase 4 — Integration** | Done | State persistence (save/load brain), HTTP API (cerebra serve, default port 17971), POST /v1/chat uses BrainAgent.process_message. Diagnostics (cerebra diagnose), export. |
@@ -444,7 +444,7 @@ Optimize performance
 ## Key Technical Decisions
 
 1. **State Persistence:** SQLite + JSON for brain state.
-2. **Vector Database:** Self-contained only — ChromaDB in persistent local mode (single directory, no separate server) or sqlite-vec; one store per brain under `~/.cerebra`.
+2. **Vector Database:** Self-contained only — ChromaDB in persistent local mode (single directory, no separate server) or sqlite-vec; one store per brain under `~/.cerebraai`.
 3. **CLI:** Typer with Rich for terminal output (tables, panels).
 4. **Init required:** No chat or serve until at least one brain exists; base SOUL set at init; Tools and User Context adaptive over time.
 5. **Integration:** HTTP + WebSocket API (`cerebra serve`) for Nanobot, OpenClawd, and other tools.

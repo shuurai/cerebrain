@@ -15,4 +15,4 @@ venv/
 .cursor/
 
 # Local data (do not commit user brains)
-# .cerebra/ is in home dir, not repo
+# .cerebraai/ is in home dir, not repo

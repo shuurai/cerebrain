@@ -1,5 +1,5 @@
 [project]
-name = "cerebra"
+name = "cerebraai"
 version = "0.3.3"
 
 description = "Brain matrix CLI: one integrated mind (emotional, logical, memory, inspiration, consciousness). SOUL, MEMORY, USER, TOOLS. Not a conventional agent framework."
@@ -7,15 +7,16 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [{ name = "Cerebra contributors" }]
-keywords = ["ai", "agent", "brain", "cli", "terminal"]
+keywords = ["ai", "brain", "brain-matrix", "cli", "terminal"]
 classifiers = [
     "Development Status :: 3 - Alpha",
+    "Environment :: Console",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
-
 dependencies = [
     "typer>=0.9.0",
     "rich>=13.0.0",
@@ -34,8 +35,13 @@ dev = [
     "ruff>=0.1.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/shuurai/cerebra"
+Repository = "https://github.com/shuurai/cerebra"
+Documentation = "https://github.com/shuurai/cerebra#readme"
+
 [project.scripts]
-cerebra = "cerebra.cli.commands:app"
+cerebraai = "cerebra.cli.commands:app"
 
 [build-system]
 requires = ["hatchling"]

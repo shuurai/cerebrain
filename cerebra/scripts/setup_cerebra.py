@@ -183,4 +183,4 @@ class BrainWizard:
         console.print(f"[green]✓[/green] Config saved to {config_path}")
         if llm_provider == "openrouter" and not api_key:
             console.print("[yellow]Add OpenRouter API key to config and get a key: https://openrouter.ai/keys[/yellow]")
-        console.print(f"\nNext: [cyan]cerebra chat[/cyan]  or  [cyan]cerebra serve[/cyan] (port {server_port})")
+        console.print(f"\nNext: [cyan]cerebraai chat[/cyan]  or  [cyan]cerebraai serve[/cyan] (port {server_port})")

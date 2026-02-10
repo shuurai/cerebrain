@@ -1,4 +1,4 @@
-"""CLI commands for cerebra."""
+"""CLI commands for cerebraai."""
 
 from pathlib import Path
 from typing import Optional
@@ -10,7 +10,7 @@ from rich.table import Table
 from cerebra import __logo__, __version__
 
 app = typer.Typer(
-    name="cerebra",
+    name="cerebraai",
     help=f"{__logo__} - Brain Matrix CLI",
     no_args_is_help=True,
 )
@@ -30,7 +30,7 @@ def main(
         None, "--version", "-v", callback=_version_callback, is_eager=True
     ),
 ) -> None:
-    """Cerebra - Terminal-based brain matrix (SOUL, MEMORY, USER, TOOLS)."""
+    """Cerebraai - Terminal-based brain matrix (SOUL, MEMORY, USER, TOOLS)."""
     pass
 
 
@@ -125,7 +125,7 @@ def status() -> None:
         for b in brains:
             console.print(f"  - [cyan]{b}[/cyan]")
     else:
-        console.print("  [dim]None (run cerebra init first)[/dim]")
+        console.print("  [dim]None (run cerebraai init first)[/dim]")
 
 
 @app.command("list")
@@ -135,7 +135,7 @@ def list_cmd() -> None:
 
     brains = list_brains()
     if not brains:
-        console.print("[dim]No brains. Run cerebra init first.[/dim]")
+        console.print("[dim]No brains. Run cerebraai init first.[/dim]")
         return
     table = Table(title="Brains")
     table.add_column("Name", style="cyan")
