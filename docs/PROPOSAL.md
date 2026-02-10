@@ -142,7 +142,7 @@ cerebrain/
 │   ├── llm_providers.yaml
 │   └── emotion_profiles.yaml
 ├── scripts/
-│   ├── setup_cerebraai.py  # Init / brain creation
+│   ├── setup_cerebrain.py  # Init / brain creation
 │   └── brain_diagnostics.py
 ├── cli/
 │   ├── __init__.py
@@ -320,7 +320,7 @@ console = Console()
 @app.command()
 def init(name: str = typer.Option(..., "--name", "-n"), llm: str = typer.Option(..., "--llm")):
     """Initialize a new brain (required before first use)."""
-    from scripts.setup_cerebraai import BrainWizard
+    from scripts.setup_cerebrain import BrainWizard
     BrainWizard().create_brain(name, llm)
 
 @app.command()

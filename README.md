@@ -1,8 +1,8 @@
 # Cerebrain!!!
 
-[![PyPI version](https://img.shields.io/pypi/v/cerebra-matrix?label=pypi)](https://pypi.org/project/cerebra-matrix/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/cerebra-matrix)](https://pypi.org/project/cerebra-matrix/)
-[![Python](https://img.shields.io/pypi/pyversions/cerebra-matrix)](https://pypi.org/project/cerebra-matrix/)
+[![PyPI version](https://img.shields.io/pypi/v/cerebrain?label=pypi)](https://pypi.org/project/cerebrain/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/cerebrain)](https://pypi.org/project/cerebrain/)
+[![Python](https://img.shields.io/pypi/pyversions/cerebrain)](https://pypi.org/project/cerebrain/)
 [![License: MIT](https://img.shields.io/github/license/shuurai/cerebrain)](https://github.com/shuurai/cerebrain/blob/main/LICENSE)
 
 **GitHub:** [github.com/shuurai/cerebrain](https://github.com/shuurai/cerebrain)
@@ -23,15 +23,15 @@ integration (e.g. Nanobot, OpenClawd).
 
 ## Install
 
-On PyPI the package is **cerebra-matrix** (the name `cerebrain` is taken). The
-CLI command is `cerebrain`.
+On PyPI the package is **cerebrain** (the name `cerebrain` is taken). The CLI
+command is `cerebrain`.
 
 ```bash
 # PyPI
-pip install cerebra-matrix
+pip install cerebrain
 
 # uv
-uv tool install cerebra-matrix
+uv tool install cerebrain
 
 # From source
 git clone https://github.com/shuurai/cerebrain.git && cd cerebrain
@@ -203,7 +203,7 @@ but with stateful, observable internals and self-awareness.
 - **cerebrain/utils/** — Config, persistence, natural randomness (ANU/random.org
   fallback).
 
-**Optional:** `pip install cerebra-matrix[chromadb]` for long-term vector memory
+**Optional:** `pip install cerebrain[chromadb]` for long-term vector memory
 (self-contained ChromaDB).
 
 **Data and config:** `~/.cerebrain/` (workspace, brain_states, config.yaml).

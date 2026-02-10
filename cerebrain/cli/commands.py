@@ -50,7 +50,7 @@ def init_cmd(
     ),
 ) -> None:
     """Initialize a new brain: interactive wizard for provider, API key, model, port, soul."""
-    from cerebrain.scripts.setup_cerebraai import BrainWizard
+    from cerebrain.scripts.setup_cerebrain import BrainWizard
 
     wizard = BrainWizard()
     wizard.create_brain(name=name, llm=llm)
