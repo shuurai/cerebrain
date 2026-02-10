@@ -80,6 +80,7 @@ def chat(
     from cerebrain.ui.terminal_brain import TerminalInterface
 
     console.print("Booting ....")
+    console.print("[dim]Syncing SOUL · MEMORY · USER · TOOLS ....[/dim]")
     agent = BrainAgent.load(brain)
     console.print("Loading into Cerebra Matrix Terminal ....")
     TerminalInterface(agent, show_visual=not no_visual).run()

@@ -1,6 +1,6 @@
 [project]
 name = "cerebrain"
-version = "0.3.5"
+version = "0.3.7"
 
 description = "Brain matrix CLI: one integrated mind (emotional, logical, memory, inspiration, consciousness). SOUL, MEMORY, USER, TOOLS. Not a conventional agent framework."
 readme = "README.md"

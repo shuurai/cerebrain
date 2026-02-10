@@ -53,8 +53,13 @@ def _parse_tool_call(reply: str) -> tuple[str | None, dict[str, Any]]:
     return (tool_name, args)
 
 
+# Max tool-call rounds so the model can use tool results (e.g. inspiration) to produce the final reply
+_MAX_TOOL_CHAIN_ROUNDS = 3
+
+
 def _handle_tool_calls(agent: "BrainAgent", reply: str) -> str:
-    """If reply contains a tool call, run the skill and return its result; else return reply unchanged."""
+    """If reply contains a tool call, run the skill and return its result; else return reply unchanged.
+    (Used when not chaining; for chained tool-then-response, see process_message.)"""
     tool_name, args = _parse_tool_call(reply)
     if tool_name is None:
         return reply
@@ -318,7 +323,22 @@ class BrainAgent:
         self._activity_left = 0.9
         self.push_thinking_status("Reasoning...")
         reply = self._logical.complete(messages)
-        reply = _handle_tool_calls(self, reply)
+        # Chain: if the model called a tool, run it and ask the model to respond using the result
+        for _ in range(_MAX_TOOL_CHAIN_ROUNDS):
+            tool_name, args = _parse_tool_call(reply)
+            if tool_name is None:
+                break
+            self.push_thinking_status(f"Calling tool: {tool_name}")
+            result = self.run_skill(tool_name, **args)
+            if tool_name == "spark_inspiration" and result:
+                self.push_thinking_status(result)
+            messages.append({"role": "assistant", "content": reply})
+            messages.append({
+                "role": "user",
+                "content": f"[Result of {tool_name}]: {result}\n\nUsing this result, produce your reply to the user now (e.g. the poem). Do not call another tool; write the final response only.",
+            })
+            self.push_thinking_status("Reasoning...")
+            reply = self._logical.complete(messages)
         self.push_thinking_status("Done.")
         self._activity_left = 0.5
         self._memory.add_short_term("assistant", reply)

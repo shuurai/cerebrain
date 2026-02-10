@@ -24,6 +24,7 @@ class TerminalInterface:
         """Simple loop: prompt, input, process (with thinking animation), print reply. Ctrl+C to exit."""
         console.print(f"\n[bold]CEREBRA[/bold] - {self.agent.name}")
         console.print("[dim]Type a message and press Enter. Ctrl+C to exit.[/dim]\n")
+        console.print("[dim]Waking mind ....[/dim]")
         greeting = self.agent.get_greeting()
         console.print(f"[bold green]{self.agent.name}:[/bold green] {greeting}\n")
 
