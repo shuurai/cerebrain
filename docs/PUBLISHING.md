@@ -1,6 +1,14 @@
 # Publishing Cerebrain to PyPI and uv
 
-## Prerequisites
+## GitHub Actions (recommended)
+
+A workflow in `.github/workflows/publish.yml` builds, checks (`twine check`), and uploads to PyPI when you **publish a release** (tag) on GitHub. Manual run from the Actions tab only builds and checks (no upload).
+
+**Setup:** In the repo go to **Settings → Secrets and variables → Actions**, add a secret named `PYPI_API_TOKEN` with your PyPI API token (from [pypi.org/manage/account](https://pypi.org/manage/account/#api-tokens)). Use `__token__` as the username when creating the token if prompted; the secret value is the token itself (e.g. `pypi-...`).
+
+**Release flow:** Bump version in `pyproject.toml` and `cerebrain/__init__.py`, commit, create a new release (e.g. tag `v0.3.5`), publish the release. The workflow runs and uploads to PyPI.
+
+## Prerequisites (local publish)
 
 - Python 3.11+
 - [build](https://pypi.org/project/build/) (for building wheels/sdist)
