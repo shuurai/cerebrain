@@ -1,0 +1,25 @@
+# Default brain template (used as reference; init creates per-brain config)
+brain:
+  name: "default"
+  version: "1.0"
+
+soul:
+  core_traits: ["curious", "analytical", "creative", "empathetic"]
+  values: ["truth", "simplicity", "growth", "helpfulness"]
+  communication_style: "metaphorical yet precise"
+
+memory:
+  short_term_capacity: 7
+  long_term_type: "chromadb"  # self-contained, persist_directory
+  consolidation_interval: 100
+
+inspiration:
+  sources:
+    - name: "anu_quantum"
+      url: "https://qrng.anu.edu.au/API/jsonI.php"
+      priority: 1
+    - name: "random_org"
+      url: "https://www.random.org/integers/"
+      priority: 2
+  generation_interval: 30
+  breakthrough_threshold: 0.7
