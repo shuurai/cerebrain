@@ -1,6 +1,6 @@
 """Default config files and model templates."""
 
-from cerebra.config.model_templates import (
+from cerebrain.config.model_templates import (
     DEFAULT_MAX_TOKENS,
     DEFAULT_TEMPERATURE,
     get_llm_state_for_brain,

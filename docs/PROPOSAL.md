@@ -1,44 +1,65 @@
-"Cerebra" - Brain Matrix CLI - Project Proposal
+"Cerebrain" - Brain Matrix CLI - Project Proposal
 
 ## Project Overview
 
-Cerebra is a terminal-based, ASCII-visualized **brain matrix** — not a single agent, but a system of brain parts (emotional, logical, memory, inspiration) working together, extended from the agent concept. It simulates emotional, logical, and memory processes with true inspiration generation. It's an open-source framework for creating personalized AI personalities with continuous learning and stateful processing.
+Cerebrain is a terminal-based, ASCII-visualized **brain matrix** — not a single
+agent, but a system of brain parts (emotional, logical, memory, inspiration)
+working together, extended from the agent concept. It simulates emotional,
+logical, and memory processes with true inspiration generation. It's an
+open-source framework for creating personalized AI personalities with continuous
+learning and stateful processing.
 
 ### Scope
 
-- **In scope (v1):** Single-brain matrix (multiple brain parts), terminal-first; SOUL + MEMORY + USER + TOOLS; ASCII visualization; init flow; one self-contained vector store; HTTP/WebSocket API for integration with other tools (e.g. Nanobot, OpenClawd); CLI only (no web UI).
-- **Out of scope (v1):** Multi-brain communication, training mode, plugin system, web UI. These remain in Future extensions.
+- **In scope (v1):** Single-brain matrix (multiple brain parts), terminal-first;
+  SOUL + MEMORY + USER + TOOLS; ASCII visualization; init flow; one
+  self-contained vector store; HTTP/WebSocket API for integration with other
+  tools (e.g. Nanobot, OpenClawd); CLI only (no web UI).
+- **Out of scope (v1):** Multi-brain communication, training mode, plugin
+  system, web UI. These remain in Future extensions.
 
 ## Distribution & Install
 
 Cerebra is installable on Linux and macOS via standard Python tooling.
 
-- **PyPI:** `pip install cerebra` (or `cerebra-ai` if the name is taken on PyPI).
-- **uv:** `uv tool install cerebra` for isolated, fast install.
-- **From source:** `git clone https://github.com/yourusername/cerebra.git && cd cerebra && pip install -e .` or `uv pip install -e .`
+- **PyPI:** `pip install cerebrain`
+- **uv:** `uv tool install cerebrain` for isolated, fast install.
+- **From source:**
+  `git clone https://github.com/shuurai/cerebrain.git && cd cerebrain && pip install -e .`
+  or `uv pip install -e .`
 
-Platform support: Linux and macOS are explicitly supported. Windows is untested; community contributions welcome.
+Platform support: Linux and macOS are explicitly supported. Windows is untested;
+community contributions welcome.
 
 ## Initialize Before Use
 
-Cerebra must be initialized before first use. No `chat` or `serve` until at least one brain is created.
+Cerebra must be initialized before first use. No `chat` or `serve` until at
+least one brain is created.
 
-- **First-time:** Run `cerebra init` (or `cerebra onboard`). This creates workspace, config, and the first brain.
-- **Base SOUL:** Stored at init (e.g. `~/.cerebraai/workspace/<brain>/SOUL.md` or inside `brain_states/`) — personality, values, communication style. SOUL is the fixed core and does not change automatically.
+- **First-time:** Run `cerebrain init` (or `cerebrain onboard`). This creates
+  workspace, config, and the first brain.
+- **Base SOUL:** Stored at init (e.g. `~/.cerebrain/workspace/<brain>/SOUL.md`
+  or inside `brain_states/`) — personality, values, communication style. SOUL is
+  the fixed core and does not change automatically.
 - **Adaptive over time:**
-  - **User context:** e.g. `workspace/USER.md` or per-brain user file; updated as preferences/facts are learned. User Context is adaptive.
-  - **Tools:** The set of tools and their descriptions can be extended or configured over time (e.g. via config or workspace `TOOLS.md`); tool-use results feed back into memory. Tools are adaptive in configuration and usage; SOUL does not change.
+  - **User context:** e.g. `workspace/USER.md` or per-brain user file; updated
+    as preferences/facts are learned. User Context is adaptive.
+  - **Tools:** The set of tools and their descriptions can be extended or
+    configured over time (e.g. via config or workspace `TOOLS.md`); tool-use
+    results feed back into memory. Tools are adaptive in configuration and
+    usage; SOUL does not change.
 
-**Principle:** Base SOUL is set at init; Tools and User Context are adaptive over time.
+**Principle:** Base SOUL is set at init; Tools and User Context are adaptive
+over time.
 
 ```mermaid
 flowchart LR
   subgraph init [Init]
-    A[cerebra init] --> B[workspace + SOUL + config]
+    A[cerebrain init] --> B[workspace + SOUL + config]
   end
   subgraph run [Run]
-    B --> C[cerebra chat]
-    B --> D[cerebra serve]
+    B --> C[cerebrain chat]
+    B --> D[cerebrain serve]
   end
   subgraph external [Integrations]
     D --> E[Nanobot]
@@ -59,8 +80,12 @@ flowchart TB
 
 ## Core Features
 
-1. **Terminal-based Brain Visualization** — Real-time ASCII art showing brain activity. Default `cerebra chat` runs the interactive terminal UI with ASCII visualization; use `cerebra chat --no-visual` for terminal chat without ASCII.
-2. Brain Matrix Architecture — emotional, logical, memory, and inspiration parts (extended from agent concept)
+1. **Terminal-based Brain Visualization** — Real-time ASCII art showing brain
+   activity. Default `cerebrain chat` runs the interactive terminal UI with
+   ASCII visualization; use `cerebrain chat --no-visual` for terminal chat
+   without ASCII.
+2. Brain Matrix Architecture — emotional, logical, memory, and inspiration parts
+   (extended from agent concept)
 3. Natural Randomness — Quantum/atmospheric sources with fallbacks
 4. LLM Agnostic — Plug in any LLM API (OpenAI, Anthropic, Ollama, etc.)
 5. Persistent State — Saves brain state between sessions
@@ -71,17 +96,22 @@ flowchart TB
 - Python 3.11+
 - **Typer** (CLI), **Rich** (terminal UI, ASCII art, tables/panels)
 - Textual (optional for advanced UI)
-- **Self-contained vector database:** ChromaDB in persistent local mode (single directory, no separate server process), or alternatively sqlite-vec. One vector store per brain under `~/.cerebraai` (or project data dir); no distributed/external vector service in v1.
+- **Self-contained vector database:** ChromaDB in persistent local mode (single
+  directory, no separate server process), or alternatively sqlite-vec. One
+  vector store per brain under `~/.cerebrain` (or project data dir); no
+  distributed/external vector service in v1.
 - Sentence-Transformers (embeddings)
 - Requests (API calls)
 - PyYAML (configuration)
 - SQLite (state persistence)
-- **pyproject.toml** as primary (entry point `cerebra = "cerebra.cli.commands:app"`, Hatchling build); optional `requirements.txt` for legacy pip.
+- **pyproject.toml** as primary (entry point
+  `cerebrain = "cerebrain.cli.commands:app"`, Hatchling build); optional
+  `requirements.txt` for legacy pip.
 
 ## Project Structure
 
 ```
-cerebra/
+cerebrain/
 ├── core/
 │   ├── __init__.py
 │   ├── brain_agent.py      # Brain matrix orchestration
@@ -112,7 +142,7 @@ cerebra/
 │   ├── llm_providers.yaml
 │   └── emotion_profiles.yaml
 ├── scripts/
-│   ├── setup_cerebra.py    # Init / brain creation
+│   ├── setup_cerebraai.py  # Init / brain creation
 │   └── brain_diagnostics.py
 ├── cli/
 │   ├── __init__.py
@@ -120,57 +150,74 @@ cerebra/
 ├── pyproject.toml
 ├── README.md
 ├── LICENSE (MIT)
-└── cerebra/__main__.py     # python -m cerebra
+└── cerebrain/__main__.py   # python -m cerebrain
 ```
 
 ## Implementation Phases (Tightened)
 
-- **Phase 1 — Foundation:** Core architecture, Typer CLI skeleton, configuration system, LLM API adapter interface, basic persistence layer.
-- **Phase 2 — Brain & Memory:** Emotional Self, natural randomness sources, memory system with self-contained vector DB, inspiration engine basics.
-- **Phase 3 — Terminal UI:** ASCII brain visualization (Rich), multi-panel display, real-time metrics dashboard, interactive chat interface, color-coded activity indicators.
-- **Phase 4 — Integration:** Full system integration, state persistence (save/load brain), HTTP/WebSocket API server, performance optimization, basic diagnostics, documentation.
+- **Phase 1 — Foundation:** Core architecture, Typer CLI skeleton, configuration
+  system, LLM API adapter interface, basic persistence layer.
+- **Phase 2 — Brain & Memory:** Emotional Self, natural randomness sources,
+  memory system with self-contained vector DB, inspiration engine basics.
+- **Phase 3 — Terminal UI:** ASCII brain visualization (Rich), multi-panel
+  display, real-time metrics dashboard, interactive chat interface, color-coded
+  activity indicators.
+- **Phase 4 — Integration:** Full system integration, state persistence
+  (save/load brain), HTTP/WebSocket API server, performance optimization, basic
+  diagnostics, documentation.
 
 ## Status (Implementation Progress)
 
-| Area | Status | Notes |
-|------|--------|-------|
-| **Phase 1 — Foundation** | Done | CLI (Typer), config (YAML, ~/.cerebraai), persistence (brain_states, list/load/save/export), init wizard (SOUL, USER, TOOLS, LLM templates). |
-| **Phase 2 — Brain & Memory** | Done | EmotionalSelf (baseline + nudge), NaturalRandomness (ANU/random.org + SystemEntropy), MemorySystem (short-term + optional ChromaDB long-term), InspirationEngine (spark), LogicalSelf (OpenAI-compatible HTTP client). BrainAgent orchestrates all; system prompt from SOUL/USER/TOOLS + memory. |
-| **Phase 3 — Terminal UI** | Done | ASCII brain frame, consciousness stream (mood/inspiration after reply), metrics dashboard (generate_metrics_panel). Chat loop with optional --no-visual. |
-| **Phase 4 — Integration** | Done | State persistence (save/load brain), HTTP API (cerebra serve, default port 17971), POST /v1/chat uses BrainAgent.process_message. Diagnostics (cerebra diagnose), export. |
-| **LLM providers** | Done | OpenRouter (default), openai, anthropic, ollama, local. Model templates (minimax/minimax-m2 default for OpenRouter, max_tokens 8192, temperature 0.7). API key from config. |
-| **WebSocket API** | Done | `WS /v1/stream`: one agent per connection, send JSON `{content}`, receive `{reply, session_id}`. Requires FastAPI/uvicorn (used when available). |
-| **Optional ChromaDB** | Done | Long-term vector memory when `pip install cerebra[chromadb]`; otherwise long-term is no-op. |
+| Area                         | Status | Notes                                                                                                                                                                                                                                                                                            |
+| ---------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Phase 1 — Foundation**     | Done   | CLI (Typer), config (YAML, ~/.cerebrain), persistence (brain_states, list/load/save/export), init wizard (SOUL, USER, TOOLS, LLM templates).                                                                                                                                                     |
+| **Phase 2 — Brain & Memory** | Done   | EmotionalSelf (baseline + nudge), NaturalRandomness (ANU/random.org + SystemEntropy), MemorySystem (short-term + optional ChromaDB long-term), InspirationEngine (spark), LogicalSelf (OpenAI-compatible HTTP client). BrainAgent orchestrates all; system prompt from SOUL/USER/TOOLS + memory. |
+| **Phase 3 — Terminal UI**    | Done   | ASCII brain frame, consciousness stream (mood/inspiration after reply), metrics dashboard (generate_metrics_panel). Chat loop with optional --no-visual.                                                                                                                                         |
+| **Phase 4 — Integration**    | Done   | State persistence (save/load brain), HTTP API (cerebrain serve, default port 17971), POST /v1/chat uses BrainAgent.process_message. Diagnostics (cerebrain diagnose), export.                                                                                                                    |
+| **LLM providers**            | Done   | OpenRouter (default), openai, anthropic, ollama, local. Model templates (minimax/minimax-m2 default for OpenRouter, max_tokens 8192, temperature 0.7). API key from config.                                                                                                                      |
+| **WebSocket API**            | Done   | `WS /v1/stream`: one agent per connection, send JSON `{content}`, receive `{reply, session_id}`. Requires FastAPI/uvicorn (used when available).                                                                                                                                                 |
+| **Optional ChromaDB**        | Done   | Long-term vector memory when `pip install cerebrain[chromadb]`; otherwise long-term is no-op.                                                                                                                                                                                                    |
 
-**Current codebase:** Phase 1–4 and WebSocket implemented; CLI, chat, serve (HTTP + WS), init, status, list, diagnose, export all functional.
+**Current codebase:** Phase 1–4 and WebSocket implemented; CLI, chat, serve
+(HTTP + WS), init, status, list, diagnose, export all functional.
 
 ## Integration API
 
-Cerebra can run as a "brain service" so other tools (e.g. Nanobot, OpenClawd) can call it via HTTP or WebSocket.
+Cerebra can run as a "brain service" so other tools (e.g. Nanobot, OpenClawd)
+can call it via HTTP or WebSocket.
 
-- **Server:** `cerebra serve [--brain NAME] [--port PORT]` (default port 17971).
+- **Server:** `cerebrain serve [--brain NAME] [--port PORT]` (default port
+  17971).
 - **HTTP API:** REST on a single port:
-  - `POST /v1/chat` or `POST /v1/messages` — send message, return stream or final response. Body: JSON with `role`, `content`, optional `session_id`.
+  - `POST /v1/chat` or `POST /v1/messages` — send message, return stream or
+    final response. Body: JSON with `role`, `content`, optional `session_id`.
   - `GET /v1/status` or `GET /health` — health/readiness.
   - `GET /v1/brain` (optional) — current brain config (non-sensitive).
-- **WebSocket:** `WS /v1/stream` — stateful chat: one brain matrix per connection. Send JSON `{"content": "..."}` (or `"message"`); receive `{"reply": "...", "session_id": "..."}`. On connect, server sends `{"type": "connected", "brain": "..."}`. Requires FastAPI/uvicorn (used when available).
-- **Integrations:** Nanobot and OpenClawd can use HTTP or WebSocket clients to talk to cerebra when it runs in server mode.
+- **WebSocket:** `WS /v1/stream` — stateful chat: one brain matrix per
+  connection. Send JSON `{"content": "..."}` (or `"message"`); receive
+  `{"reply": "...", "session_id": "..."}`. On connect, server sends
+  `{"type": "connected", "brain": "..."}`. Requires FastAPI/uvicorn (used when
+  available).
+- **Integrations:** Nanobot and OpenClawd can use HTTP or WebSocket clients to
+  talk to cerebrain when it runs in server mode.
 
 ## CLI Reference
 
-Entry point: `cerebra` (and `python -m cerebra`). Use Typer and Rich for output (tables, panels).
+Entry point: `cerebrain` (and `python -m cerebrain`). Use Typer and Rich for
+output (tables, panels).
 
-| Command | Description |
-|---------|-------------|
-| `cerebra init` (or `cerebra onboard`) | Initialize/create brain (required before first use) |
-| `cerebra chat [--brain NAME] [--no-visual]` | Interactive chat with ASCII visualization (default); `--no-visual` for terminal chat only |
-| `cerebra serve [--brain NAME] [--port PORT]` | Run HTTP + WebSocket API server |
-| `cerebra status` | Show config path, workspace, brains, API keys status |
-| `cerebra list` (or `cerebra list-brains`) | List created brains |
-| `cerebra diagnose --brain NAME` | Run diagnostics |
-| `cerebra export --brain NAME [--format json,yaml,txt]` | Export brain state |
+| Command                                                  | Description                                                                               |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `cerebrain init` (or `cerebrain onboard`)                | Initialize/create brain (required before first use)                                       |
+| `cerebrain chat [--brain NAME] [--no-visual]`            | Interactive chat with ASCII visualization (default); `--no-visual` for terminal chat only |
+| `cerebrain serve [--brain NAME] [--port PORT]`           | Run HTTP + WebSocket API server                                                           |
+| `cerebrain status`                                       | Show config path, workspace, brains, API keys status                                      |
+| `cerebrain list` (or `cerebrain list-brains`)            | List created brains                                                                       |
+| `cerebrain diagnose --brain NAME`                        | Run diagnostics                                                                           |
+| `cerebrain export --brain NAME [--format json,yaml,txt]` | Export brain state                                                                        |
 
-Root options: `--version` / `-v` for version. Same patterns as nanobot: `typer.Option` for flags, Rich `Console` and `Table` for status/list.
+Root options: `--version` / `-v` for version. Same patterns as nanobot:
+`typer.Option` for flags, Rich `Console` and `Table` for status/list.
 
 ## Detailed Component Specifications
 
@@ -205,17 +252,19 @@ Inspiration: 3 active | Last: 2m ago | Power: 1.7 ║ ║ LLM: GPT-4 | Context:
 Required before first use. On first run:
 
 ```bash
-$ cerebra init
-# or: cerebra onboard
+$ cerebrain init
+# or: cerebrain onboard
 ```
 
 Wizard flow (ASCII or prompts):
 
 - **1. Brain Name:** e.g. [Einstein-Mode]
-- **2. Core Personality (SOUL):** Primary traits, values, communication style — stored as base SOUL; does not change automatically.
+- **2. Core Personality (SOUL):** Primary traits, values, communication style —
+  stored as base SOUL; does not change automatically.
 - **3. LLM Configuration:** Provider, model, API key.
 - **4. Emotional Profile:** Baseline mood, emotional range.
-- **5. Memory Configuration:** Short-term capacity, long-term storage (self-contained vector DB).
+- **5. Memory Configuration:** Short-term capacity, long-term storage
+  (self-contained vector DB).
 - **6. Inspiration Sources:** Primary, fallback, backup.
 
 [Create Brain] [Advanced Options] [Exit]
@@ -233,8 +282,8 @@ soul: core_traits: ["curious", "analytical", "creative", "empathetic"] values:
 emotional_profile: baseline: valence: 0.6 arousal: 0.5 dominance: 0.4 traits:
 curiosity: 0.8 creativity: 0.7 empathy: 0.6 patience: 0.5
 
-memory: short_term_capacity: 7 long_term_type: "chromadb"  # self-contained, persist_directory
-consolidation_interval: 100
+memory: short_term_capacity: 7 long_term_type: "chromadb" # self-contained,
+persist_directory consolidation_interval: 100
 
 inspiration: sources: - name: "anu_quantum" url:
 "https://qrng.anu.edu.au/API/jsonI.php" priority: 1 - name: "random_org" url:
@@ -257,20 +306,21 @@ local: base_url: "http://localhost:5000" models: []
 
 ### 4. CLI Implementation (Typer)
 
-Entry point in `pyproject.toml`: `cerebra = "cerebra.cli.commands:app"`. Example structure:
+Entry point in `pyproject.toml`: `cerebrain = "cerebrain.cli.commands:app"`.
+Example structure:
 
 ```python
-# cerebra/cli/commands.py
+# cerebrain/cli/commands.py
 import typer
 from rich.console import Console
 
-app = typer.Typer(name="cerebra", no_args_is_help=True)
+app = typer.Typer(name="cerebrain", no_args_is_help=True)
 console = Console()
 
 @app.command()
 def init(name: str = typer.Option(..., "--name", "-n"), llm: str = typer.Option(..., "--llm")):
     """Initialize a new brain (required before first use)."""
-    from scripts.setup_cerebra import BrainWizard
+    from scripts.setup_cerebraai import BrainWizard
     BrainWizard().create_brain(name, llm)
 
 @app.command()
@@ -403,16 +453,16 @@ brain_agent self.metrics_history = []
 See **Distribution & Install** for install options. Quick usage:
 
 ```bash
-# After: pip install cerebra  OR  uv tool install cerebra  OR  pip install -e .
+# After: pip install cerebrain  OR  uv tool install cerebrain  OR  pip install -e .
 
-cerebra init                    # Required before first use
-cerebra chat                    # Default brain, with ASCII visualization
-cerebra chat --brain einstein --no-visual   # Terminal chat only
-cerebra serve                   # API server (default port 17971)
-cerebra status                  # Config, workspace, brains
-cerebra list                    # List brains
-cerebra diagnose --brain einstein
-cerebra export --brain einstein --format json
+cerebrain init                    # Required before first use
+cerebrain chat                    # Default brain, with ASCII visualization
+cerebrain chat --brain einstein --no-visual   # Terminal chat only
+cerebrain serve                   # API server (default port 17971)
+cerebrain status                  # Config, workspace, brains
+cerebrain list                    # List brains
+cerebrain diagnose --brain einstein
+cerebrain export --brain einstein --format json
 ```
 
 ## Development Workflow with Cursor
@@ -444,10 +494,14 @@ Optimize performance
 ## Key Technical Decisions
 
 1. **State Persistence:** SQLite + JSON for brain state.
-2. **Vector Database:** Self-contained only — ChromaDB in persistent local mode (single directory, no separate server) or sqlite-vec; one store per brain under `~/.cerebraai`.
+2. **Vector Database:** Self-contained only — ChromaDB in persistent local mode
+   (single directory, no separate server) or sqlite-vec; one store per brain
+   under `~/.cerebrain`.
 3. **CLI:** Typer with Rich for terminal output (tables, panels).
-4. **Init required:** No chat or serve until at least one brain exists; base SOUL set at init; Tools and User Context adaptive over time.
-5. **Integration:** HTTP + WebSocket API (`cerebra serve`) for Nanobot, OpenClawd, and other tools.
+4. **Init required:** No chat or serve until at least one brain exists; base
+   SOUL set at init; Tools and User Context adaptive over time.
+5. **Integration:** HTTP + WebSocket API (`cerebrain serve`) for Nanobot,
+   OpenClawd, and other tools.
 6. **UI Library:** Rich for terminal interfaces and ASCII visualization.
 7. **Configuration:** YAML for human-readable brain/LLM configs.
 8. **API Design:** Plugin architecture for LLM providers.
@@ -480,7 +534,7 @@ Optimize performance
 ## Expected Output
 
 ```bash
-$ cerebra chat --brain einstein
+$ cerebrain chat --brain einstein
 ```
 
 ╔══════════════════════════════════════════════════════════╗ ║ CEREBRA -

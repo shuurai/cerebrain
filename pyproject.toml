@@ -1,12 +1,14 @@
 [project]
-name = "cerebraai"
+name = "cerebrain"
 version = "0.3.3"
 
 description = "Brain matrix CLI: one integrated mind (emotional, logical, memory, inspiration, consciousness). SOUL, MEMORY, USER, TOOLS. Not a conventional agent framework."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-authors = [{ name = "Cerebra contributors" }]
+# Empty so wheel METADATA has no License-File field (avoids twine "unrecognized field" on older tools)
+license-files = []
+authors = [{ name = "Cerebrain contributors" }]
 keywords = ["ai", "brain", "brain-matrix", "cli", "terminal"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -36,22 +38,22 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/shuurai/cerebra"
-Repository = "https://github.com/shuurai/cerebra"
-Documentation = "https://github.com/shuurai/cerebra#readme"
+Homepage = "https://github.com/shuurai/cerebrain"
+Repository = "https://github.com/shuurai/cerebrain"
+Documentation = "https://github.com/shuurai/cerebrain#readme"
 
 [project.scripts]
-cerebraai = "cerebra.cli.commands:app"
+cerebrain = "cerebrain.cli.commands:app"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["cerebra"]
+packages = ["cerebrain"]
 
 [tool.hatch.build.targets.wheel.sources]
-"cerebra" = "cerebra"
+"cerebrain" = "cerebrain"
 
 [tool.ruff]
 line-length = 100

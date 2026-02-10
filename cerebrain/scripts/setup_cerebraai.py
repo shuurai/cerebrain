@@ -1,19 +1,19 @@
-"""Brain creation wizard (cerebra init)."""
+"""Brain creation wizard (cerebrain init)."""
 
 from pathlib import Path
 
 from rich.console import Console
 from rich.prompt import Prompt
 
-from cerebra.config.model_templates import get_llm_state_for_brain
-from cerebra.utils.config_loader import (
+from cerebrain.config.model_templates import get_llm_state_for_brain
+from cerebrain.utils.config_loader import (
     ensure_dirs,
     get_brain_workspace,
     get_config_path,
     load_config,
     save_config,
 )
-from cerebra.utils.persistence import save_brain_state
+from cerebrain.utils.persistence import save_brain_state
 
 console = Console()
 
@@ -183,4 +183,4 @@ class BrainWizard:
         console.print(f"[green]✓[/green] Config saved to {config_path}")
         if llm_provider == "openrouter" and not api_key:
             console.print("[yellow]Add OpenRouter API key to config and get a key: https://openrouter.ai/keys[/yellow]")
-        console.print(f"\nNext: [cyan]cerebraai chat[/cyan]  or  [cyan]cerebraai serve[/cyan] (port {server_port})")
+        console.print(f"\nNext: [cyan]cerebrain chat[/cyan]  or  [cyan]cerebrain serve[/cyan] (port {server_port})")

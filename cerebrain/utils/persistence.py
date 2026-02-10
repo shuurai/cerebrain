@@ -6,7 +6,7 @@ from typing import Any
 
 import yaml
 
-from cerebra.utils.config_loader import (
+from cerebrain.utils.config_loader import (
     ensure_dirs,
     get_brain_states_dir,
     get_brain_workspace,

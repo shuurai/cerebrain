@@ -1,12 +1,12 @@
-"""Brain diagnostics (cerebra diagnose)."""
+"""Brain diagnostics (cerebrain diagnose)."""
 
 from pathlib import Path
 
 from rich.console import Console
 from rich.table import Table
 
-from cerebra.utils.config_loader import get_brain_workspace
-from cerebra.utils.persistence import load_brain_state
+from cerebrain.utils.config_loader import get_brain_workspace
+from cerebrain.utils.persistence import load_brain_state
 
 console = Console()
 

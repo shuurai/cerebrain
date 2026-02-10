@@ -5,7 +5,7 @@ import time
 from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
-    from cerebra.ui.terminal_buffer import TerminalBuffer
+    from cerebrain.ui.terminal_buffer import TerminalBuffer
 
 # Layout (0-based row indices)
 

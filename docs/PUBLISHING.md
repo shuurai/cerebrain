@@ -1,4 +1,4 @@
-# Publishing Cerebra to PyPI and uv
+# Publishing Cerebrain to PyPI and uv
 
 ## Prerequisites
 
@@ -11,7 +11,8 @@ Optional: [uv](https://docs.astral.sh/uv/) for fast builds and publish.
 
 ## 1. Bump version
 
-Edit `pyproject.toml` and `cerebra/__init__.py`: set `version` and `__version__` to the new release (e.g. `0.3.4`).
+Edit `pyproject.toml` and `cerebrain/__init__.py`: set `version` and
+`__version__` to the new release (e.g. `0.3.4`).
 
 ## 2. Build
 
@@ -29,7 +30,9 @@ Or with uv:
 uv build
 ```
 
-This produces `dist/cerebraai-<version>.tar.gz` (sdist) and `dist/cerebraai-<version>-py3-none-any.whl` (wheel). The PyPI package name is `cerebraai` because `cerebra` is already taken.
+This produces `dist/cerebrain-<version>.tar.gz` (sdist) and
+`dist/cerebrain-<version>-py3-none-any.whl` (wheel). The PyPI package name is
+`cerebrain`.
 
 ## 3. Check the package (optional)
 
@@ -37,17 +40,6 @@ This produces `dist/cerebraai-<version>.tar.gz` (sdist) and `dist/cerebraai-<ver
 pip install twine
 twine check dist/*
 ```
-
-## 4. Upload to PyPI
-
-**Test PyPI (recommended first):**
-
-```bash
-twine upload --repository testpypi dist/*
-# Use __token__ as username and your Test PyPI API token as password.
-```
-
-Then try installing: `pip install -i https://test.pypi.org/simple/ cerebraai`
 
 **Production PyPI:**
 
@@ -65,7 +57,9 @@ uv publish
 
 ## 5. uv registry
 
-`uv tool install cerebraai` and `uv pip install cerebraai` use PyPI by default. Once the package is on PyPI, it is automatically available to uv. No separate “uv repo” step. The CLI command is `cerebraai`.
+`uv tool install cerebrain` and `uv pip install cerebrain` use PyPI by default.
+Once the package is on PyPI, it is automatically available to uv. No separate
+“uv repo” step. The CLI command is `cerebrain`.
 
 ## 6. After release
 
@@ -75,10 +69,11 @@ uv publish
 
 ## Checklist
 
-- [ ] Version bumped in `pyproject.toml` and `cerebra/__init__.py`
+- [ ] Version bumped in `pyproject.toml` and `cerebrain/__init__.py`
 - [ ] `python -m build` or `uv build` runs without errors
 - [ ] `twine check dist/*` passes
 - [ ] Test install from Test PyPI
 - [ ] Upload to PyPI
-- [ ] `pip install cerebraai` and `uv tool install cerebraai` work; run `cerebraai --help`
+- [ ] `pip install cerebrain` and `uv tool install cerebrain` work; run
+      `cerebrain --help`
 - [ ] Git tag and GitHub release created

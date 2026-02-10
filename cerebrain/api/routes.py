@@ -11,7 +11,7 @@ def handle_chat(body: dict[str, Any], brain_name: str | None = None) -> dict[str
     if not content:
         return {"reply": "", "session_id": body.get("session_id"), "error": "empty content"}
     try:
-        from cerebra.core.brain_agent import BrainAgent
+        from cerebrain.core.brain_agent import BrainAgent
         agent = BrainAgent.load(brain_name)
         reply = agent.process_message(content)
         return {"reply": reply, "session_id": body.get("session_id")}
@@ -31,7 +31,7 @@ def handle_brain_info(brain_name: str | None) -> dict[str, Any]:
 
 async def handle_websocket(websocket: Any, brain_name: str | None = None) -> None:
     """WebSocket /v1/stream — stateful chat: one brain matrix per connection, JSON messages."""
-    from cerebra.core.brain_agent import BrainAgent
+    from cerebrain.core.brain_agent import BrainAgent
 
     try:
         agent = await asyncio.to_thread(BrainAgent.load, brain_name)

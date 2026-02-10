@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from cerebra.api.routes import handle_brain_info, handle_chat, handle_health, handle_websocket
+from cerebrain.api.routes import handle_brain_info, handle_chat, handle_health, handle_websocket
 
 
 def run_server(brain_name: str | None = None, port: int = 17971) -> None:
@@ -12,7 +12,7 @@ def run_server(brain_name: str | None = None, port: int = 17971) -> None:
         from fastapi import FastAPI, WebSocket
         from fastapi.middleware.cors import CORSMiddleware
 
-        app = FastAPI(title="Cerebra API")
+        app = FastAPI(title="Cerebrain API")
         app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"])
 
         @app.post("/v1/chat")
@@ -67,7 +67,7 @@ def run_server(brain_name: str | None = None, port: int = 17971) -> None:
                 pass
 
         server = HTTPServer(("0.0.0.0", port), Handler)
-        from cerebra import __logo__, __version__
+        from cerebrain import __logo__, __version__
         from rich.console import Console
         Console().print(f"{__logo__} API on http://0.0.0.0:{port} (stdlib server)")
         try:

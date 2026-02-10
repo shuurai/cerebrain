@@ -3,7 +3,7 @@
 from typing import TYPE_CHECKING, Any, Callable
 
 if TYPE_CHECKING:
-    from cerebra.core.brain_agent import BrainAgent
+    from cerebrain.core.brain_agent import BrainAgent
 
 # (name, description, handler)
 # handler(agent: BrainAgent, **kwargs) -> str

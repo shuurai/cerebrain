@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from cerebra.utils.randomness import NaturalRandomness
+from cerebrain.utils.randomness import NaturalRandomness
 
 
 # Simple association chains for "spark" (can be extended from config)

@@ -6,7 +6,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 if TYPE_CHECKING:
-    from cerebra.core.brain_agent import BrainAgent
+    from cerebrain.core.brain_agent import BrainAgent
 
 
 def _format_mood(mood_data: dict) -> str:

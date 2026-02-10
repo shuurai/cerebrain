@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from rich.console import Console
 
 if TYPE_CHECKING:
-    from cerebra.core.brain_agent import BrainAgent
+    from cerebrain.core.brain_agent import BrainAgent
 
 console = Console()
 

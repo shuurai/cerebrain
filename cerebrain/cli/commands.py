@@ -1,4 +1,4 @@
-"""CLI commands for cerebraai."""
+"""CLI commands for cerebrain."""
 
 from pathlib import Path
 from typing import Optional
@@ -7,10 +7,10 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from cerebra import __logo__, __version__
+from cerebrain import __logo__, __version__
 
 app = typer.Typer(
-    name="cerebraai",
+    name="cerebrain",
     help=f"{__logo__} - Brain Matrix CLI",
     no_args_is_help=True,
 )
@@ -30,7 +30,7 @@ def main(
         None, "--version", "-v", callback=_version_callback, is_eager=True
     ),
 ) -> None:
-    """Cerebraai - Terminal-based brain matrix (SOUL, MEMORY, USER, TOOLS)."""
+    """Cerebrain - Terminal-based brain matrix (SOUL, MEMORY, USER, TOOLS)."""
     pass
 
 
@@ -50,7 +50,7 @@ def init_cmd(
     ),
 ) -> None:
     """Initialize a new brain: interactive wizard for provider, API key, model, port, soul."""
-    from cerebra.scripts.setup_cerebra import BrainWizard
+    from cerebrain.scripts.setup_cerebraai import BrainWizard
 
     wizard = BrainWizard()
     wizard.create_brain(name=name, llm=llm)
@@ -76,8 +76,8 @@ def chat(
     no_visual: bool = typer.Option(False, "--no-visual", help="Terminal chat only, no ASCII"),
 ) -> None:
     """Start interactive chat; default shows ASCII visualization."""
-    from cerebra.core.brain_agent import BrainAgent
-    from cerebra.ui.terminal_brain import TerminalInterface
+    from cerebrain.core.brain_agent import BrainAgent
+    from cerebrain.ui.terminal_brain import TerminalInterface
 
     console.print("Booting ....")
     agent = BrainAgent.load(brain)
@@ -96,8 +96,8 @@ def serve(
     port: Optional[int] = typer.Option(None, "--port", "-p", help="Server port (default from config or 17971)"),
 ) -> None:
     """Run HTTP + WebSocket API server."""
-    from cerebra.api.server import run_server
-    from cerebra.utils.config_loader import get_default_port
+    from cerebrain.api.server import run_server
+    from cerebrain.utils.config_loader import get_default_port
 
     run_server(brain_name=brain, port=port if port is not None else get_default_port())
 
@@ -110,8 +110,8 @@ def serve(
 @app.command()
 def status() -> None:
     """Show config path, workspace, brains, API keys status."""
-    from cerebra.utils.config_loader import get_config_path, get_data_dir
-    from cerebra.utils.persistence import list_brains
+    from cerebrain.utils.config_loader import get_config_path, get_data_dir
+    from cerebrain.utils.persistence import list_brains
 
     config_path = get_config_path()
     data_dir = get_data_dir()
@@ -125,17 +125,17 @@ def status() -> None:
         for b in brains:
             console.print(f"  - [cyan]{b}[/cyan]")
     else:
-        console.print("  [dim]None (run cerebraai init first)[/dim]")
+        console.print("  [dim]None (run cerebrain init first)[/dim]")
 
 
 @app.command("list")
 def list_cmd() -> None:
     """List created brains."""
-    from cerebra.utils.persistence import list_brains
+    from cerebrain.utils.persistence import list_brains
 
     brains = list_brains()
     if not brains:
-        console.print("[dim]No brains. Run cerebraai init first.[/dim]")
+        console.print("[dim]No brains. Run cerebrain init first.[/dim]")
         return
     table = Table(title="Brains")
     table.add_column("Name", style="cyan")
@@ -160,7 +160,7 @@ def diagnose(
     brain: str = typer.Argument(..., help="Brain name"),
 ) -> None:
     """Run brain diagnostics."""
-    from cerebra.scripts.brain_diagnostics import BrainDiagnostics
+    from cerebrain.scripts.brain_diagnostics import BrainDiagnostics
 
     diag = BrainDiagnostics(brain)
     diag.run_full_diagnostics()
@@ -172,7 +172,7 @@ def export(
     format: str = typer.Option("json", "--format", "-f", help="Export format: json, yaml, txt"),
 ) -> None:
     """Export brain state."""
-    from cerebra.utils.persistence import export_brain
+    from cerebrain.utils.persistence import export_brain
 
     path = export_brain(brain, fmt=format)
     if path:

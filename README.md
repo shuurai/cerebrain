@@ -1,11 +1,11 @@
-# Cerebraai!!!
+# Cerebrain!!!
 
-[![PyPI version](https://img.shields.io/pypi/v/cerebraai?label=pypi)](https://pypi.org/project/cerebraai/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/cerebraai)](https://pypi.org/project/cerebraai/)
-[![Python](https://img.shields.io/pypi/pyversions/cerebraai)](https://pypi.org/project/cerebraai/)
-[![License: MIT](https://img.shields.io/github/license/shuurai/cerebra)](https://github.com/shuurai/cerebra/blob/main/LICENSE)
+[![PyPI version](https://img.shields.io/pypi/v/cerebra-matrix?label=pypi)](https://pypi.org/project/cerebra-matrix/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/cerebra-matrix)](https://pypi.org/project/cerebra-matrix/)
+[![Python](https://img.shields.io/pypi/pyversions/cerebra-matrix)](https://pypi.org/project/cerebra-matrix/)
+[![License: MIT](https://img.shields.io/github/license/shuurai/cerebrain)](https://github.com/shuurai/cerebrain/blob/main/LICENSE)
 
-**GitHub:** [github.com/shuurai/cerebra](https://github.com/shuurai/cerebra)
+**GitHub:** [github.com/shuurai/cerebrain](https://github.com/shuurai/cerebrain)
 
 Terminal-based **brain matrix** CLI: five parts (emotional, logical, memory,
 inspiration, consciousness) working as one. **SOUL**, **MEMORY**, **USER**,
@@ -23,17 +23,18 @@ integration (e.g. Nanobot, OpenClawd).
 
 ## Install
 
-On PyPI the package is **cerebraai**. The CLI command is `cerebraai`.
+On PyPI the package is **cerebra-matrix** (the name `cerebrain` is taken). The
+CLI command is `cerebrain`.
 
 ```bash
 # PyPI
-pip install cerebraai
+pip install cerebra-matrix
 
 # uv
-uv tool install cerebraai
+uv tool install cerebra-matrix
 
 # From source
-git clone https://github.com/shuurai/cerebra.git && cd cerebra
+git clone https://github.com/shuurai/cerebrain.git && cd cerebrain
 pip install -e .
 ```
 
@@ -42,35 +43,35 @@ pip install -e .
 ### Test locally without installing
 
 ```bash
-cd cerebra.cli
+cd cerebrain
 pip install typer rich pyyaml requests httpx
-PYTHONPATH=. python -m cerebra --help   # or, if installed: cerebraai --help
-PYTHONPATH=. python -m cerebra init --name dev --llm openrouter
-PYTHONPATH=. python -m cerebra chat
+PYTHONPATH=. python -m cerebrain --help
+PYTHONPATH=. python -m cerebrain init --name dev --llm openrouter
+PYTHONPATH=. python -m cerebrain chat
 ```
 
 Or with a venv: `python -m venv .venv`, `source .venv/bin/activate`, then the
-same `pip install` and `PYTHONPATH=. python -m cerebra ...`. Editable install
-(`pip install -e .`) gives you the `cerebraai` command on your PATH.
+same `pip install` and `PYTHONPATH=. python -m cerebrain ...`. Editable install
+(`pip install -e .`) gives you the `cerebrain` command on your PATH.
 
 ## Quick start
 
 1. **Initialize** (required before first use):
 
    ```bash
-   cerebraai init
+   cerebrain init
    ```
 
    You’ll be prompted for: brain name, LLM provider (openrouter, openai,
    anthropic, ollama, local), API key (when needed), model, max tokens,
    temperature, server port, and **Soul** (traits, values, communication style →
-   SOUL.md). Config is written to `~/.cerebraai/config.yaml`.
+   SOUL.md). Config is written to `~/.cerebrain/config.yaml`.
 
 2. **Chat** (simple terminal; boot messages then prompt/response):
 
    ```bash
-   cerebraai chat
-   cerebraai chat --brain my-brain --no-visual
+   cerebrain chat
+   cerebrain chat --brain my-brain --no-visual
    ```
 
    On start you see “Booting ….” and “Loading into Cerebra Matrix Terminal ….”
@@ -80,8 +81,8 @@ same `pip install` and `PYTHONPATH=. python -m cerebra ...`. Editable install
 3. **API server** (for Nanobot / OpenClawd). Port from config or 17971:
 
    ```bash
-   cerebraai serve
-   cerebraai serve --port 17971
+   cerebrain serve
+   cerebrain serve --port 17971
    ```
 
    **HTTP:** `POST /v1/chat` with `{"content": "..."}`. **WebSocket:**
@@ -92,10 +93,10 @@ same `pip install` and `PYTHONPATH=. python -m cerebra ...`. Editable install
 4. **Other commands:**
 
    ```bash
-   cerebraai status
-   cerebraai list
-   cerebraai diagnose --brain my-brain
-   cerebraai export --brain my-brain --format json
+   cerebrain status
+   cerebrain list
+   cerebrain diagnose --brain my-brain
+   cerebrain export --brain my-brain --format json
    ```
 
 ## Architecture
@@ -118,7 +119,7 @@ Four pillars define the mind’s content and tools:
 - **USER** — User context and preferences (adaptive).
 - **TOOLS** — Descriptions and use of tools (from workspace; adaptive).
 
-Everything is **init-before-use**: config and SOUL live under `~/.cerebraai/`;
+Everything is **init-before-use**: config and SOUL live under `~/.cerebrain/`;
 each brain has its own state.
 
 ## Inner mechanism
@@ -182,7 +183,7 @@ but with stateful, observable internals and self-awareness.
   - **get_consciousness_state** — Activity levels of all streams.
   - **get_thought_stream** — Recent thought lines from a stream (`stream`, `n`).
 
-  Skills are defined in `cerebra/core/self_skills.py`; the agent can describe
+  Skills are defined in `cerebrain/core/self_skills.py`; the agent can describe
   them and use results when tool-calling is enabled.
 
 - **Response style:** Replies are kept concise (1–3 sentences, minimal words, no
@@ -190,26 +191,26 @@ but with stateful, observable internals and self-awareness.
 
 ## Project layout
 
-- **cerebra/core/** — Brain agent (orchestration), emotional self, logical self
-  (LLM), memory (short-term + optional ChromaDB long-term), inspiration engine,
-  **self_skills** (default internal APIs), consciousness (stub).
-- **cerebra/cli/** — Typer CLI (init, chat, serve, status, list, diagnose,
+- **cerebrain/core/** — Brain agent (orchestration), emotional self, logical
+  self (LLM), memory (short-term + optional ChromaDB long-term), inspiration
+  engine, **self_skills** (default internal APIs), consciousness (stub).
+- **cerebrain/cli/** — Typer CLI (init, chat, serve, status, list, diagnose,
   export).
-- **cerebra/ui/** — Terminal chat UI (simple loop); optional buffer/managers
+- **cerebrain/ui/** — Terminal chat UI (simple loop); optional buffer/managers
   code parked for future fancy terminal.
-- **cerebra/api/** — HTTP server (POST /v1/chat, WebSocket /v1/stream).
-- **cerebra/scripts/** — Init wizard, diagnostics.
-- **cerebra/utils/** — Config, persistence, natural randomness (ANU/random.org
+- **cerebrain/api/** — HTTP server (POST /v1/chat, WebSocket /v1/stream).
+- **cerebrain/scripts/** — Init wizard, diagnostics.
+- **cerebrain/utils/** — Config, persistence, natural randomness (ANU/random.org
   fallback).
 
-**Optional:** `pip install cerebraai[chromadb]` for long-term vector memory
+**Optional:** `pip install cerebra-matrix[chromadb]` for long-term vector memory
 (self-contained ChromaDB).
 
-**Data and config:** `~/.cerebraai/` (workspace, brain_states, config.yaml).
+**Data and config:** `~/.cerebrain/` (workspace, brain_states, config.yaml).
 
 ## Configuration
 
-Config: `~/.cerebraai/config.yaml`. After `cerebraai init` it contains all
+Config: `~/.cerebrain/config.yaml`. After `cerebrain init` it contains all
 supported keys. Example:
 
 ```yaml
@@ -229,7 +230,7 @@ providers:
   # ... anthropic, ollama, local
 ```
 
-- **server.port** — Default for `cerebraai serve`.
+- **server.port** — Default for `cerebrain serve`.
 - **llm_defaults** — max_tokens and temperature (used as defaults for new
   brains).
 - **providers.<name>.api_key** — Set at init or edit the file; the LLM client
@@ -238,7 +239,7 @@ providers:
 ## Contribute & Roadmap
 
 **Contribute:** Open issues and pull requests at
-[github.com/shuurai/cerebraai](https://github.com/shuurai/cerebraai). Ideas,
+[github.com/shuurai/cerebrain](https://github.com/shuurai/cerebrain). Ideas,
 docs, and code welcome.
 
 **Roadmap — where Cerebra could go:**
@@ -264,8 +265,8 @@ observable, composable, and still not “just another agent framework.”
 
 ## License
 
-MIT. See [LICENSE](https://github.com/shuurai/cerebra/blob/main/LICENSE) in the
-repo.
+MIT. See [LICENSE](https://github.com/shuurai/cerebrain/blob/main/LICENSE) in
+the repo.
 
 ---
 

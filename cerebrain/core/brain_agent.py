@@ -7,10 +7,10 @@ from collections import deque
 from pathlib import Path
 from typing import Any
 
-from cerebra.utils.config_loader import get_brain_workspace, get_default_brain_name, get_provider_config
-from cerebra.utils.persistence import load_brain_state
+from cerebrain.utils.config_loader import get_brain_workspace, get_default_brain_name, get_provider_config
+from cerebrain.utils.persistence import load_brain_state
 
-from cerebra.core.self_skills import get_skill_descriptions_for_prompt, run_skill as _run_skill
+from cerebrain.core.self_skills import get_skill_descriptions_for_prompt, run_skill as _run_skill
 
 STREAM_NAMES = ("emotional", "logical", "memory", "inspiration", "consciousness")
 
@@ -80,11 +80,11 @@ class BrainAgent:
         self._llm_tokens_used = 0
 
         # Subsystems
-        from cerebra.core.emotional_self import EmotionalSelf
-        from cerebra.core.inspiration_engine import InspirationEngine
-        from cerebra.core.logical_self import LogicalSelf
-        from cerebra.core.memory_system import MemorySystem
-        from cerebra.utils.config_loader import get_memory_vectors_dir
+        from cerebrain.core.emotional_self import EmotionalSelf
+        from cerebrain.core.inspiration_engine import InspirationEngine
+        from cerebrain.core.logical_self import LogicalSelf
+        from cerebrain.core.memory_system import MemorySystem
+        from cerebrain.utils.config_loader import get_memory_vectors_dir
 
         self._emotional = EmotionalSelf(self._state.get("emotional_profile"))
         self._inspiration = InspirationEngine(self._state.get("inspiration", {}).get("sources"))
@@ -198,15 +198,15 @@ class BrainAgent:
     @classmethod
     def load(cls, brain_name: str | None = None) -> "BrainAgent":
         """Load agent for the given brain name, or default brain."""
-        from cerebra.utils.config_loader import ensure_dirs, list_brains_from_disk
+        from cerebrain.utils.config_loader import ensure_dirs, list_brains_from_disk
 
         ensure_dirs()
         name = brain_name or get_default_brain_name()
         if not name:
-            raise RuntimeError("No brain configured. Run 'cerebraai init' first.")
+            raise RuntimeError("No brain configured. Run 'cerebrain init' first.")
         workspace = get_brain_workspace(name)
         if not workspace.exists():
-            raise RuntimeError(f"Brain workspace not found: {workspace}. Run 'cerebraai init'.")
+            raise RuntimeError(f"Brain workspace not found: {workspace}. Run 'cerebrain init'.")
         state = load_brain_state(name)
         return cls(name=name, workspace=workspace, state=state)
 
