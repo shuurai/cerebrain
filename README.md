@@ -11,7 +11,8 @@ Terminal-based **brain matrix** CLI: five parts (emotional, logical, memory,
 inspiration, consciousness) working as one. **SOUL**, **MEMORY**, **USER**,
 **TOOLS**. Init-before-use, simple terminal chat, self-awareness with live
 state, default **self-skills** (internal APIs), and HTTP/WebSocket API for
-integration (e.g. Nanobot, OpenClawd).
+integration (e.g. Nanobot, OpenClawd or real robots that are taking over the
+world).
 
 ## News
 
