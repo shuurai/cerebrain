@@ -1,5 +1,7 @@
 """Brain matrix orchestration: emotional, logical, memory, inspiration parts."""
 
+import queue
+import re
 import time
 from collections import deque
 from pathlib import Path
@@ -8,7 +10,15 @@ from typing import Any
 from cerebra.utils.config_loader import get_brain_workspace, get_default_brain_name, get_provider_config
 from cerebra.utils.persistence import load_brain_state
 
+from cerebra.core.self_skills import get_skill_descriptions_for_prompt, run_skill as _run_skill
+
 STREAM_NAMES = ("emotional", "logical", "memory", "inspiration", "consciousness")
+
+# Match [TOOL_CALL]...[/TOOL_CALL] block
+_TOOL_CALL_BLOCK = re.compile(r"\[TOOL_CALL\](.*?)\[/TOOL_CALL\]", re.DOTALL | re.IGNORECASE)
+# Inside block: tool => "name" and optionally args => { ... }
+_TOOL_NAME = re.compile(r'tool\s*=>\s*["\']([^"\']+)["\']', re.IGNORECASE)
+_ARGS_BLOCK = re.compile(r'args\s*=>\s*\{([^}]*)\}', re.DOTALL | re.IGNORECASE)
 
 
 def _load_workspace_text(workspace: Path, name: str) -> str:
@@ -16,6 +26,41 @@ def _load_workspace_text(workspace: Path, name: str) -> str:
     if p.exists():
         return p.read_text().strip()
     return ""
+
+
+def _parse_tool_call(reply: str) -> tuple[str | None, dict[str, Any]]:
+    """If reply contains [TOOL_CALL]...[/TOOL_CALL], return (tool_name, args). Else (None, {})."""
+    m = _TOOL_CALL_BLOCK.search(reply)
+    if not m:
+        return (None, {})
+    block = m.group(1)
+    name_m = _TOOL_NAME.search(block)
+    if not name_m:
+        return (None, {})
+    tool_name = name_m.group(1).strip()
+    args: dict[str, Any] = {}
+    args_m = _ARGS_BLOCK.search(block)
+    if args_m:
+        args_str = (args_m.group(1) or "").strip()
+        if args_str:
+            for part in args_str.split(","):
+                if "=>" in part:
+                    k, v = part.split("=>", 1)
+                    k, v = k.strip().strip('"\''), v.strip().strip('"\'')
+                    if v.isdigit():
+                        v = int(v)
+                    args[k] = v
+    return (tool_name, args)
+
+
+def _handle_tool_calls(agent: "BrainAgent", reply: str) -> str:
+    """If reply contains a tool call, run the skill and return its result; else return reply unchanged."""
+    tool_name, args = _parse_tool_call(reply)
+    if tool_name is None:
+        return reply
+    agent.push_thinking_status(f"Calling tool: {tool_name}")
+    result = agent.run_skill(tool_name, **args)
+    return result
 
 
 class BrainAgent:
@@ -67,6 +112,19 @@ class BrainAgent:
         # Heartbeat / blood-flow pulse (consciousness influenced by blood)
         self._pulse = 0.5
         self._last_beat = time.monotonic()
+        # Thinking status stream for UI (reasoning, calling tool, etc.)
+        self._thinking_queue: queue.Queue[str] = queue.Queue()
+
+    def push_thinking_status(self, msg: str) -> None:
+        """Append a status line for the thinking stream (UI consumes during process_message)."""
+        self._thinking_queue.put(msg)
+
+    def get_next_thinking_status(self) -> str | None:
+        """Pop one status line if available; non-blocking. Returns None if empty."""
+        try:
+            return self._thinking_queue.get_nowait()
+        except queue.Empty:
+            return None
 
     def get_pulse(self) -> float:
         """Current pulse 0..1 (blood rush into brain); part of consciousness."""
@@ -101,6 +159,10 @@ class BrainAgent:
             "consciousness": (self._activity_left + self._activity_right) / 2.0,
             "heartbeat": self.get_pulse(),
         }
+
+    def run_skill(self, name: str, **kwargs: Any) -> str:
+        """Run a self-internal skill by name (e.g. get_mood, spark_inspiration). Returns result string."""
+        return _run_skill(self, name, **kwargs)
 
     def tick_idle_thoughts(self) -> None:
         """Add one idle thought to a random stream; update heartbeat (blood pulse)."""
@@ -148,6 +210,25 @@ class BrainAgent:
         state = load_brain_state(name)
         return cls(name=name, workspace=workspace, state=state)
 
+    def _format_live_state(self) -> str:
+        """Current state of all brain parts for the system prompt (so you can report what you are)."""
+        metrics = self.get_current_metrics()
+        activities = self.get_stream_activities()
+        mood = metrics.get("emotional") or {}
+        mood_str = ", ".join(f"{k}:{v:.2f}" for k, v in sorted(mood.items())[:5]) if mood else "—"
+        mem = metrics.get("memory") or {}
+        st = mem.get("short_term", 0)
+        lt = mem.get("long_term", 0)
+        insp = metrics.get("inspiration") or {}
+        pulse = self.get_pulse()
+        return (
+            f"emotional: {mood_str} | "
+            f"memory: ST={st} LT={lt} | "
+            f"inspiration: active={insp.get('active', 0)} | "
+            f"pulse: {pulse:.2f} | "
+            f"stream_activity: logical={activities.get('logical', 0):.2f} inspiration={activities.get('inspiration', 0):.2f} consciousness={activities.get('consciousness', 0):.2f}"
+        )
+
     def _build_system_prompt(self) -> str:
         soul = _load_workspace_text(self.workspace, "SOUL.md")
         user = _load_workspace_text(self.workspace, "USER.md")
@@ -160,16 +241,53 @@ class BrainAgent:
         lt = self._memory.query_long_term("recent context", k=3)
         if lt:
             parts.append("# Relevant memory\n" + "\n".join(lt))
+
+        # Self-awareness: what Cerebra is and current state (so replies can reference actual state)
+        parts.append(
+            "# Brain matrix (what you are)\n"
+            "You are Cerebra: a brain matrix with five parts working as one. "
+            "Emotional self: mood state (e.g. curious, calm). "
+            "Logical self: reasoning and language (this LLM). "
+            "Memory: short-term (recent turns) and long-term (vector store). "
+            "Inspiration: randomness and creativity sparks. "
+            "Consciousness: integration of the above; influenced by a pulse (heartbeat). "
+            "When asked about yourself, consciousness, or capabilities, describe these parts and use the current state below."
+        )
+        parts.append("# Current state (live)\n" + self._format_live_state())
+        parts.append("# Self skills (internal APIs)\n" + get_skill_descriptions_for_prompt())
         # Terminal style: terse, like a ship computer (Alien mother ship). Keep replies short.
         parts.append(
             "# Response style\n"
             "Reply in 1-3 short sentences. Be concise. Terminal / ship-computer style: "
             "minimal words, no fluff, no preamble. Answer the question or acknowledge; then stop."
         )
-        return "\n\n---\n\n".join(parts) if parts else (
-            "You are a brain matrix. Respond as one integrated mind. "
-            "Keep every reply very short (1-3 sentences). Terminal style: terse, like a ship computer."
+        if not parts:
+            return (
+                "You are Cerebra, a brain matrix (emotional, logical, memory, inspiration, consciousness). "
+                "Current state: " + self._format_live_state() + ". "
+                "Reply in 1-3 short sentences. Terminal style: terse, like a ship computer."
+            )
+        return "\n\n---\n\n".join(parts)
+
+    def get_greeting(self) -> str:
+        """Generate a one-line greeting from identity and current state of mind (mood, pulse, etc.). Does not add to memory."""
+        soul = _load_workspace_text(self.workspace, "SOUL.md")
+        state_line = self._format_live_state()
+        system = (
+            "You are Cerebra, a brain matrix (emotional, logical, memory, inspiration, consciousness). "
+            "Current state: " + state_line + ". "
+            "Say only one short sentence as a greeting for starting a new chat. "
+            "Reflect your current state of mind (mood, pulse). Terminal style, no explanation."
         )
+        if soul:
+            system = soul[: 400] + "\n\n" + system
+        messages = [
+            {"role": "system", "content": system},
+            {"role": "user", "content": "Greet the user now in one sentence."},
+        ]
+        reply = self._logical.complete(messages)
+        self._llm_tokens_used += self._logical.tokens_used
+        return (reply or "Ready.").strip()
 
     def get_current_metrics(self) -> dict[str, Any]:
         """Return current metrics for dashboard."""
@@ -189,6 +307,7 @@ class BrainAgent:
     def process_message(self, content: str) -> str:
         """Process one user message and return assistant reply."""
         self._pulse = min(1.0, self._pulse + 0.2)  # blood rush when thinking
+        self.push_thinking_status("Integrating...")
         self.push_thought("consciousness", "integrating...")
         self.push_thought("logical", "reasoning...")
         self._memory.add_short_term("user", content)
@@ -197,7 +316,10 @@ class BrainAgent:
         for m in self._memory.get_recent():
             messages.append({"role": m["role"], "content": m["content"]})
         self._activity_left = 0.9
+        self.push_thinking_status("Reasoning...")
         reply = self._logical.complete(messages)
+        reply = _handle_tool_calls(self, reply)
+        self.push_thinking_status("Done.")
         self._activity_left = 0.5
         self._memory.add_short_term("assistant", reply)
         mood = self._emotional.get_mood_dict()
