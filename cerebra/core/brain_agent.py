@@ -160,7 +160,16 @@ class BrainAgent:
         lt = self._memory.query_long_term("recent context", k=3)
         if lt:
             parts.append("# Relevant memory\n" + "\n".join(lt))
-        return "\n\n---\n\n".join(parts) if parts else "You are a brain matrix: emotional, logical, memory, and inspiration parts. Respond as one integrated mind."
+        # Terminal style: terse, like a ship computer (Alien mother ship). Keep replies short.
+        parts.append(
+            "# Response style\n"
+            "Reply in 1-3 short sentences. Be concise. Terminal / ship-computer style: "
+            "minimal words, no fluff, no preamble. Answer the question or acknowledge; then stop."
+        )
+        return "\n\n---\n\n".join(parts) if parts else (
+            "You are a brain matrix. Respond as one integrated mind. "
+            "Keep every reply very short (1-3 sentences). Terminal style: terse, like a ship computer."
+        )
 
     def get_current_metrics(self) -> dict[str, Any]:
         """Return current metrics for dashboard."""
