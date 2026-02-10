@@ -206,14 +206,15 @@ class BrainAgent:
         from cerebrain.utils.config_loader import ensure_dirs, list_brains_from_disk
 
         ensure_dirs()
-        name = brain_name or get_default_brain_name()
-        if not name:
+        safe_name = brain_name or get_default_brain_name()
+        if not safe_name:
             raise RuntimeError("No brain configured. Run 'cerebrain init' first.")
-        workspace = get_brain_workspace(name)
+        workspace = get_brain_workspace(safe_name)
         if not workspace.exists():
             raise RuntimeError(f"Brain workspace not found: {workspace}. Run 'cerebrain init'.")
-        state = load_brain_state(name)
-        return cls(name=name, workspace=workspace, state=state)
+        state = load_brain_state(safe_name)
+        display_name = (state or {}).get("display_name") or safe_name
+        return cls(name=display_name, workspace=workspace, state=state)
 
     def _format_live_state(self) -> str:
         """Current state of all brain parts for the system prompt (so you can report what you are)."""

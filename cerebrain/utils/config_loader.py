@@ -1,6 +1,7 @@
 """Configuration loading and paths."""
 
 import os
+import re
 from pathlib import Path
 from typing import Any
 
@@ -97,8 +98,10 @@ def get_memory_vectors_dir(brain_name: str) -> Path:
 
 
 def _safe_brain_name(name: str) -> str:
-    """Sanitize brain name for use in paths."""
-    return "".join(c if c.isalnum() or c in "-_" else "_" for c in name).strip("_") or "default"
+    """Sanitize brain name for use in paths: lowercase, only alphanumeric and '_'."""
+    s = name.strip().lower()
+    s = re.sub(r"[^a-z0-9]+", "_", s).strip("_")
+    return s or "default"
 
 
 def ensure_dirs() -> None:

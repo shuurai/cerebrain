@@ -7,6 +7,7 @@ from typing import Any
 import yaml
 
 from cerebrain.utils.config_loader import (
+    _safe_brain_name,
     ensure_dirs,
     get_brain_states_dir,
     get_brain_workspace,
@@ -35,7 +36,7 @@ def list_brains() -> list[str]:
 def get_brain_state_path(brain_name: str) -> Path:
     """Path to brain state file (JSON)."""
     ensure_dirs()
-    safe = "".join(c if c.isalnum() or c in "-_" else "_" for c in brain_name).strip("_") or "default"
+    safe = _safe_brain_name(brain_name)
     return get_brain_states_dir() / f"{safe}.json"
 
 
@@ -72,7 +73,7 @@ def export_brain(brain_name: str, fmt: str = "json") -> Path | None:
     ensure_dirs()
     export_dir = get_data_dir() / "exports"
     export_dir.mkdir(parents=True, exist_ok=True)
-    safe = "".join(c if c.isalnum() or c in "-_" else "_" for c in brain_name).strip("_") or "default"
+    safe = _safe_brain_name(brain_name)
     if fmt == "json":
         path = export_dir / f"{safe}.json"
         with open(path, "w") as f:

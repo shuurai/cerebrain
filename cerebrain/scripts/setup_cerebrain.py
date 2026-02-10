@@ -7,6 +7,7 @@ from rich.prompt import Prompt
 
 from cerebrain.config.model_templates import get_llm_state_for_brain
 from cerebrain.utils.config_loader import (
+    _safe_brain_name,
     ensure_dirs,
     get_brain_workspace,
     get_config_path,
@@ -14,6 +15,11 @@ from cerebrain.utils.config_loader import (
     save_config,
 )
 from cerebrain.utils.persistence import save_brain_state
+
+
+def _to_display_name(s: str) -> str:
+    """Capitalise first letter of each word for display (e.g. 'bat bot' → 'Bat Bot')."""
+    return s.strip().title() if s.strip() else "Default"
 
 console = Console()
 
@@ -78,9 +84,9 @@ class BrainWizard:
 
         # ----- 1. Brain name -----
         default_name = (name or "").strip() or "default"
-        brain_name = Prompt.ask("Brain name", default=default_name).strip() or default_name
-        safe_name = "".join(c if c.isalnum() or c in "-_" else "_" for c in brain_name).strip("_") or "default"
-        brain_name = safe_name
+        raw_name = Prompt.ask("Brain name", default=default_name).strip() or default_name
+        display_name = _to_display_name(raw_name)  # e.g. "Bat Bot", "Apple", "Default"
+        safe_name = _safe_brain_name(raw_name)  # e.g. "bat_bot", "apple", "default" (folders, config)
 
         # ----- 2. LLM provider -----
         default_llm = (llm or "").strip().lower() or "openrouter"
@@ -140,7 +146,7 @@ class BrainWizard:
         style = Prompt.ask("Communication style", default="metaphorical yet precise").strip()
 
         # ----- 7. Build config and workspace -----
-        workspace = get_brain_workspace(brain_name)
+        workspace = get_brain_workspace(safe_name)
         workspace.mkdir(parents=True, exist_ok=True)
 
         llm_state = get_llm_state_for_brain(llm_provider)
@@ -156,13 +162,13 @@ class BrainWizard:
         if llm_provider == "anthropic" and api_key:
             cfg.setdefault("providers", {})["anthropic"] = {"api_key": api_key}
 
-        cfg["default_brain"] = brain_name
+        cfg["default_brain"] = safe_name
         cfg["server"] = cfg.get("server") or {}
         cfg["server"]["port"] = server_port
         cfg["llm_defaults"] = {"max_tokens": max_tokens, "temperature": temperature}
         save_config(cfg)
 
-        soul_content = _build_soul(traits, values, style, brain_name)
+        soul_content = _build_soul(traits, values, style, display_name)
         (workspace / "SOUL.md").write_text(soul_content)
         (workspace / "USER.md").write_text(DEFAULT_USER)
         (workspace / "TOOLS.md").write_text(DEFAULT_TOOLS)
@@ -170,16 +176,17 @@ class BrainWizard:
         (workspace / "memory" / "MEMORY.md").write_text("# Long-term Memory\n\n(Important facts and preferences)\n")
 
         save_brain_state(
-            brain_name,
+            safe_name,
             {
-                "name": brain_name,
+                "name": safe_name,
+                "display_name": display_name,
                 "workspace": str(workspace),
                 "llm": llm_state,
                 "memory": {"short_term_capacity": 7},
             },
         )
 
-        console.print(f"\n[green]✓[/green] Brain [cyan]{brain_name}[/cyan] created at {workspace}")
+        console.print(f"\n[green]✓[/green] Brain [cyan]{display_name}[/cyan] created at {workspace}")
         console.print(f"[green]✓[/green] Config saved to {config_path}")
         if llm_provider == "openrouter" and not api_key:
             console.print("[yellow]Add OpenRouter API key to config and get a key: https://openrouter.ai/keys[/yellow]")
